@@ -10,6 +10,32 @@
         .container {
             width: 900px;
             margin: 0 auto;
+            position: relative;
+        }
+
+        #score {
+            position: absolute;
+            top: 0;
+            left: 5px;
+            right: 0;
+            bottom: 0;
+            color: #fff;
+        }
+
+        #gameOver {
+            width: 200px;
+            position: absolute;
+            top: 50%;
+            left: 40%;
+            transform: translateX(-40%);
+            transform: translateY(-50%);
+            text-align: center;
+        }
+
+        button {}
+
+        button:hover {
+            cursor: pointer;
         }
     </style>
 </head>
@@ -18,6 +44,10 @@
     <div class="container">
         <canvas id="game" width="900" height="500"></canvas>
         <h3 id="score">scores: 0</h3>
+        <div id="gameOver" style="display:none">
+            <h1>Game Over</h1>
+            <button onclick="reload()">Chơi lại</button>
+        </div>
     </div>
 </body>
 
@@ -32,17 +62,17 @@
     var background = new Image();
     background.src = "images/background.png";
 
-    var ongTren = new Image();
-    ongTren.src = "images/ongtren.png"
+    var troubleTop = new Image();
+    troubleTop.src = "images/troubleTop.png"
 
-    var ongDuoi = new Image();
-    ongDuoi.src = "images/ongduoi.png";
+    var troubleDown = new Image();
+    troubleDown.src = "images/troubleDown.png";
 
 
     //Tạo các biến
     var score = 0;
-    var khoangCachHaiOng = 140;
-    var khoangCachDenOngDuoi;
+    var spaceTrouble = 140;
+    var spaceToTroubleDown;
 
     //Khai báo đối tượng chim với tọa độ x ,y
     var bird = {
@@ -51,8 +81,8 @@
     }
 
     //Tạo mảng ống
-    var arrayOng = [];
-    arrayOng[0] = {
+    var arrayTrouble = [];
+    arrayTrouble[0] = {
         x: canvas.width,
         y: 0
     }
@@ -73,42 +103,44 @@
         ctx.drawImage(background, 0, 0,);
         ctx.drawImage(birdImg, bird.x, bird.y);
 
-        for (let i = 0; i < arrayOng.length; i++) {
-            khoangCachDenOngDuoi = ongTren.height + khoangCachHaiOng;
+        for (let i = 0; i < arrayTrouble.length; i++) {
+            spaceToTroubleDown = troubleTop.height + spaceTrouble;
 
             //Vẽ ống trên theo tọa độ
-            ctx.drawImage(ongTren, arrayOng[i].x, arrayOng[i].y);
+            ctx.drawImage(troubleTop, arrayTrouble[i].x, arrayTrouble[i].y);
 
             //Ống dưới phụ thuộc ống trên
-            ctx.drawImage(ongDuoi, arrayOng[i].x, arrayOng[i].y + khoangCachDenOngDuoi);
+            ctx.drawImage(troubleDown, arrayTrouble[i].x, arrayTrouble[i].y + spaceToTroubleDown);
 
-            arrayOng[i].x -= 5;// để ống di chuyển;
+            arrayTrouble[i].x -= 5;// để ống di chuyển;
 
             //Tạo thêm ống khi ống di chuyển đến giữa màn hình
-            if (arrayOng[i].x == canvas.width / 1.5) {
-                arrayOng.push({
+            if (arrayTrouble[i].x == canvas.width / 1.5) {
+                arrayTrouble.push({
                     x: canvas.width,
-                    y: Math.floor(Math.random() * ongTren.height) - ongTren.height
+                    y: Math.floor(Math.random() * troubleTop.height) - troubleTop.height
                 })
             }
 
             //Xóa ống khi ống đi hết màn canvas
-            if (arrayOng[i].x == 0) {
-                arrayOng.splice(0, 1)
+            if (arrayTrouble[i].x == 0) {
+                arrayTrouble.splice(0, 1)
             }
 
             //Chim qua ống thì cộng điểm
-            if (arrayOng[i].x == bird.x) {
+            if (arrayTrouble[i].x == bird.x) {
                 score++
             }
 
             //CHECK ĐIỀU KIỆN VA CHẠM
             if (bird.y + birdImg.height == canvas.height
-                || bird.x + birdImg.width >= arrayOng[i].x
-                && bird.x <= arrayOng[i].x + ongTren.width
-                && (bird.y < arrayOng[i].y + ongTren.height
-                    || bird.y + birdImg.height >= arrayOng[i].y + khoangCachDenOngDuoi)
+                || bird.x + birdImg.width >= arrayTrouble[i].x
+                && bird.x <= arrayTrouble[i].x + troubleTop.width
+                && (bird.y < arrayTrouble[i].y + troubleTop.height
+                    || bird.y + birdImg.height >= arrayTrouble[i].y + spaceToTroubleDown)
             ) {
+                document.getElementById("gameOver").style.display = "block";
+                document.getElementById("reload").style.display = "block";
                 return;
             }
         }
@@ -122,6 +154,10 @@
     }
     start();
 
+
+    function reload() {
+        window.location.reload()
+    }
 </script>
 
 </html>
