@@ -13,6 +13,29 @@
             position: relative;
         }
 
+        #bg-start {
+            background-image: url(./images/background.png);
+            background-size: cover;
+            height: 80vh;
+            position: relative;
+        }
+
+        .btn-start {
+            position: absolute;
+            top: 0;
+            left: 40%;
+            transform: translateX(-40%);
+            transform: translateY(-0%);
+            width: 200px;
+            height: 50px;
+            border-radius: 24px;
+            background-color: rgb(199, 70, 70);
+            color: white;
+            font-size: 20px;
+            box-shadow: 10px 10px 30px rgba(73, 27, 6, 0.39);
+            border: none
+        }
+
         #score {
             position: absolute;
             top: 0;
@@ -27,8 +50,7 @@
             position: absolute;
             top: 50%;
             left: 40%;
-            transform: translateX(-40%);
-            transform: translateY(-50%);
+
             text-align: center;
         }
 
@@ -42,14 +64,20 @@
 
         button:hover {
             cursor: pointer;
+            background-color: aquamarine;
         }
     </style>
 </head>
 
 <body onload="onPageLoad()">
     <div class="container">
+        <div id="bg-start">
+            <button class="btn-start" onclick="startGame()">Start</button>
+        </div>
+
         <canvas id="game" width="900" height="500"></canvas>
         <h3 id="score">scores: 0</h3>
+
         <div id="gameOver" style="display:none">
             <h1>Game Over</h1>
             <button class="btn-return" onclick="reload()">Chơi lại</button>
@@ -104,7 +132,7 @@
     }
 
     //TẠO HÀM ĐỂ CHẠY
-    function start() {
+    function startGame() {
         //Thêm hình ảnh vào
         ctx.drawImage(background, 0, 0,);
         ctx.drawImage(birdImg, bird.x, bird.y);
@@ -153,12 +181,12 @@
 
         //Hiển thị điểm khi chim qua ống
         document.getElementById('score').innerHTML = "Scores: " + score
-
+        document.getElementById('bg-start').style.display = "none"
         //Cho chim rơi tự do
         bird.y += 3;
-        setTimeout(start, 30)
+        setTimeout(startGame, 30)
     }
-    start();
+    // startGame();
 
 
     function reload() {
